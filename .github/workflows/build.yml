@@ -1,0 +1,67 @@
+name: Compilar APK
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # necessario para publicar a Release em tags v*
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: SDK Android (plataforma 28 + build-tools)
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-28" "build-tools;30.0.3"
+
+      - name: Chave de assinatura (opcional, via Secrets)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p build/keystore
+            echo "$KEYSTORE_BASE64" | base64 -d > build/keystore/vidro.jks
+            echo "usando a chave dos Secrets"
+          else
+            echo "sem KEYSTORE_BASE64: chave temporaria (bom para testar, nao para atualizar o app instalado)"
+          fi
+
+      - name: Compilar
+        env:
+          VIDRO_KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS || 'vidro-local' }}
+          VIDRO_KEY_ALIAS: ${{ secrets.KEY_ALIAS || 'vidro' }}
+        run: python build/build.py
+
+      - name: Verificar ferramentas Python
+        run: |
+          python -m pip install -q -r requirements.txt
+          for f in tools/*.py web/server.py build/*.py; do python -m py_compile "$f"; done
+          python tools/debloat.py config/debloat-tcl-android9.txt --dry-run
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Vidro-apk
+          path: dist/Vidro.apk
+
+      - name: Publicar Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/Vidro.apk
+          generate_release_notes: true
