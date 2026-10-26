@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Atalho do botao "Globoplay" do controle TCL -> abre o YouTube.
+  O servico TCL (KeyCustomFunctionService) abre o pacote com.globo.globotv quando o botao
+  e pressionado (e a Play Store se ele nao existir). Este pacote minimo ocupa esse nome e
+  apenas abre o YouTube. Para usar o Globoplay de verdade: pm uninstall com.globo.globotv
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.globo.globotv"
+    android:versionCode="1"
+    android:versionName="atalho-youtube-1">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="28" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <application android:label="Botão → YouTube" android:allowBackup="false">
+        <meta-data android:name="com.breno.tvhome.HIDE" android:value="true" />
+        <activity
+            android:name=".OpenYouTube"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

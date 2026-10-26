@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vidro — launcher para Android TV</title>
+<style>
+  :root { --bg:#07080c; --fg:#f4f5f8; --mut:#a9aebb; --glass:rgba(255,255,255,.08); --rim:rgba(255,255,255,.22); --ok:#6ee7a8; --err:#ff8a80; }
+  * { box-sizing:border-box }
+  body { margin:0; background:radial-gradient(1200px 700px at 15% -10%, #3b2a8f 0%, transparent 60%),
+         radial-gradient(900px 600px at 95% 10%, #7a2f8f 0%, transparent 55%), var(--bg);
+         color:var(--fg); font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:56px 16px 80px }
+  h1 { font-size:clamp(40px,7vw,72px); font-weight:250; letter-spacing:-.02em; margin:0 }
+  h2 { font-weight:500; font-size:22px; margin:48px 0 14px }
+  p.lead { color:var(--mut); font-size:19px; max-width:720px }
+  .glass { background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+           border:1px solid var(--rim); border-radius:22px; backdrop-filter:blur(18px) saturate(140%);
+           -webkit-backdrop-filter:blur(18px) saturate(140%); box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 20px 50px rgba(0,0,0,.35) }
+  .row { display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin-top:24px }
+  .btn { display:inline-block; padding:12px 22px; border-radius:999px; color:#0b0b10; background:#f4f5f8;
+         font-weight:600; text-decoration:none }
+  .btn.ghost { color:var(--fg); background:transparent; border:1px solid var(--rim) }
+  .btn[aria-disabled="true"] { opacity:.45; pointer-events:none }
+  #st { padding:10px 16px; border-radius:999px; font-size:14px; color:var(--mut) }
+  #st.ok { color:var(--ok) } #st.err { color:var(--err) }
+  .shots { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:16px }
+  .shots figure { margin:0; padding:8px } .shots img { width:100%; display:block; border-radius:14px }
+  .shots figcaption { color:var(--mut); font-size:14px; padding:8px 6px 4px }
+  .feat { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px }
+  .feat div { padding:18px 20px } .feat b { display:block; margin-bottom:4px }
+  .feat span { color:var(--mut); font-size:15px }
+  pre { white-space:pre-wrap; color:var(--mut); font-size:12px; max-height:220px; overflow:auto; padding:14px }
+  footer { color:var(--mut); font-size:13px; margin-top:56px }
+  a { color:#c9c3ff }
+</style>
+</head>
+<body>
+<main>
+  <h1>Vidro</h1>
+  <p class="lead">Tela inicial para Android TV com acabamento de vidro líquido: painéis foscos,
+  reflexos, profundidade e animações com mola — leve o bastante para TVs de entrada (Android 7+).
+  Inspirado na linguagem visual da Apple, com identidade própria.</p>
+  <div class="row">
+    <a id="dl" class="btn" href="/dist/Vidro.apk" aria-disabled="true">Baixar Vidro.apk</a>
+    <a class="btn ghost" href="/docs/PASSO-A-PASSO.md">Passo a passo</a>
+    <span id="st" class="glass">verificando compilação…</span>
+  </div>
+
+  <h2>Capturas (TV real, 1280×720)</h2>
+  <div class="shots">
+    <figure class="glass"><img src="/docs/img/aurora.jpg" alt="Favoritos sobre o papel de parede Aurora"><figcaption>Favoritos com vidro fosco e luz ambiente na cor do app</figcaption></figure>
+    <figure class="glass"><img src="/docs/img/categorias.jpg" alt="Categorias e grade de apps"><figcaption>Categorias pela API do Android e grade com a mesma largura</figcaption></figure>
+    <figure class="glass"><img src="/docs/img/aparencia.jpg" alt="Menu Aparência"><figcaption>Menu Aparência: papel de parede, transparência, efeitos, animações</figcaption></figure>
+    <figure class="glass"><img src="/docs/img/grafite.jpg" alt="Papel de parede Grafite"><figcaption>Papel de parede Grafite, seleção com profundidade</figcaption></figure>
+  </div>
+
+  <h2>Recursos</h2>
+  <div class="feat">
+    <div class="glass"><b>Vidro fosco real</b><span>Papel de parede pré-desfocado amostrado por painel — funciona no Android 9, sem custo de GPU.</span></div>
+    <div class="glass"><b>Modo leve</b><span>Sem desfoque, para TVs mais fracas. Animações fluidas, reduzidas ou desligadas.</span></div>
+    <div class="glass"><b>Favoritos</b><span>4 a 7 espaços; segure OK para fixar, mover, remover ou ocultar.</span></div>
+    <div class="glass"><b>Navegação determinística</b><span>Uma linha por toque, sem saltos; memoriza o último app.</span></div>
+    <div class="glass"><b>Entradas</b><span>HDMI, AV e TV ao vivo pela TV Input Framework.</span></div>
+    <div class="glass"><b>Kit de ferramentas</b><span>Backup, limpeza em lotes, restauração e verificação do ADB em Python puro.</span></div>
+  </div>
+
+  <h2>Log da compilação</h2>
+  <pre id="log" class="glass">—</pre>
+
+  <footer>Projeto pessoal, sem afiliação com Apple, Google, TCL, Netflix ou Globo. Marcas pertencem aos seus donos.
+  Código: MIT · Fonte Outfit: SIL OFL 1.1 · aapt2/dx: Apache-2.0.</footer>
+</main>
+<script>
+  const st = document.getElementById('st'), dl = document.getElementById('dl'), log = document.getElementById('log');
+  async function poll() {
+    try {
+      const r = await fetch('/status'); const j = await r.json();
+      log.textContent = j.log || '—';
+      if (j.status === 'pronto') { st.textContent = 'APK pronto'; st.className = 'glass ok'; dl.setAttribute('aria-disabled', 'false'); return; }
+      if (j.status === 'erro') { st.textContent = 'falha na compilação — veja o log'; st.className = 'glass err'; return; }
+      st.textContent = 'compilando o APK…';
+    } catch (e) { st.textContent = 'servidor indisponível'; }
+    setTimeout(poll, 2500);
+  }
+  poll();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# --- NUNCA publicar ---
+tools/.adbkey
+tools/.adbkey.pub
+*.jks
+*.keystore
+build/keystore/
+backups/
+state/
+shots/
+
+# --- gerados ---
+out/
+dist/
+.venv/
+__pycache__/
+*.pyc
+
+# --- SDK do Android (baixado por build/fetch_toolchain.py; licenca nao permite redistribuir) ---
+build/toolchain/android.jar
+build/toolchain/aapt2
+build/toolchain/aapt2.exe
+build/toolchain/*.dll

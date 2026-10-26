@@ -1,0 +1,15 @@
+run = "python3 web/server.py"
+language = "python3"
+entrypoint = "web/server.py"
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[deployment]
+run = ["python3", "web/server.py"]
+deploymentTarget = "cloudrun"

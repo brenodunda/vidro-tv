@@ -1,0 +1,6 @@
+# Ferramentas ADB (tools/): cliente ADB em Python puro, sem precisar do adb do Android SDK
+adb-shell>=0.4.4
+rsa>=4.9
+pyasn1>=0.4.8
+# opcional: descoberta da TV via mDNS (tools/discover.py)
+zeroconf>=0.131

@@ -1,0 +1,49 @@
+# Lista de limpeza usada numa Semp TCL 32S615 (Android TV 9, firmware V8-R41KT01, abril/2021).
+# Formato: "## Lote" inicia um lote; uma linha por pacote; "#" no inicio = comentario/ignorado.
+# O debloat.py usa SOMENTE "pm disable-user --user 0" (nada e desinstalado) e grava o que
+# desativou em state/disabled.txt para o restore.py desfazer.
+#
+# REVISE ANTES DE USAR NA SUA TV: firmwares diferentes tem pacotes diferentes.
+# Pacotes que NAO devem ser desativados (o script recusa): veja PROTECTED em tools/debloat.py.
+
+## Lote 1 - Telemetria e analise
+com.tcl.bi                               # BIService (le logs, envia estatisticas)
+com.google.android.tv.bugreportsender    # envio de relatorios de bug
+com.google.android.feedback              # feedback Google
+
+## Lote 2 - Conteudo e publicidade do fabricante
+com.tcl.waterfall.overseas               # "TCL Channel" (vitrine de conteudo)
+com.tcl.tv.tclhome_passive               # "TCL Home" (conteudo)
+com.tcl.dashboard                        # caixa de mensagens / "gift box"
+com.tcl.esticker                         # adesivos de loja/demo
+com.tcl.usercenter                       # conta TCL
+com.tcl.appmarket2                       # loja TCL (a Play Store continua)
+
+## Lote 3 - Servicos em segundo plano dispensaveis
+com.tcl.tvweishi                         # "limpador"/seguranca TCL
+com.tcl.copydatatotv                     # copia de dados para a TV
+com.google.android.leanbacklauncher      # launcher antigo (inativo)
+com.google.android.leanbacklauncher.recommendations
+
+## Lote 4 - Opcionais: DESCOMENTE apenas o que voce NAO usa
+# com.google.android.backdrop            # protetor de tela "modo ambiente"
+# com.google.android.katniss             # Google Assistente / busca por voz
+# com.google.android.speech.pumpkin      # reconhecimento de voz offline (assistente)
+# com.tcl.versionUpdateApp               # atualizacoes de firmware TCL
+# com.google.android.apps.mediashell     # Chromecast embutido
+# com.amazon.amazonvideo.livingroom      # Prime Video
+# com.google.android.youtube.tvmusic     # YouTube Music
+# com.google.android.videos              # Google Play Filmes
+# com.google.android.play.games          # Google Play Games
+
+# NAO desativar nesta TV (verificado com dumpsys package):
+#   com.tcl.tv / com.tcl.tvinput                TV ao vivo, HDMI, sintonizador
+#   com.tcl.tcl_bt_rcu_service, com.tcl.autopair, com.tcl.rc.ota   controle Bluetooth
+#   com.tcl.common.terminalmanagerplus          reage a conexao do controle Bluetooth
+#   com.tcl.keycustomfunctionservice            botoes de app do controle + FallbackHome
+#   com.tcl.partnercustomizer(.resource)        configuracao de botoes/canais
+#   com.google.android.tungsten.setupwraith     e "dono" da rede Wi-Fi configurada
+#   com.google.android.tv.remote.service        controle pelo celular
+#   com.google.android.inputmethod.latin, com.tcl.inputmethod.international   teclados
+#   com.android.vending, com.google.android.gms Play Store / Play Services
+#   pacotes "factory"/"fac"/"AT" (ex.: com.tcl.factory.view): NUNCA abrir nem desativar
